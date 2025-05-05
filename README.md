@@ -54,6 +54,18 @@ Deployed using **Flask API** and **Streamlit UI**. Supports both **location-base
 
 ---
 
+## 📂 Dataset
+
+The dataset used in this project is publicly available on Kaggle:
+
+🔗 https://globalsolaratlas.info/download
+
+- Format: GeoTIFF (.tif)
+- Contains multi-temporal satellite imagery
+- Covers regions with varying solar radiation levels
+
+**Note:** Due to file size, raw `.tif` data is not included in this repository. You can download the data from the above link and place it in the `data/raw/` folder.
+
 ## 🔧 Getting Started
 
 ### Clone this repo:
