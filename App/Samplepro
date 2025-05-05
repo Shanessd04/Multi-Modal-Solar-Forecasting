@@ -1,0 +1,271 @@
+import streamlit as st
+import leafmap.foliumap as leafmap
+import folium
+from streamlit_folium import st_folium
+import numpy as np
+import pandas as pd
+import plotly.express as px
+
+# ---- Streamlit App Title ----
+st.set_page_config(layout="wide")
+st.title("🌞 Solar Energy Potential Predictor")
+
+# ---- Layout: Map (Left) | Info & Graphs (Right) ----
+col1, col2 = st.columns([3, 1])
+
+with col1:
+    st.write("### 🌍 Interactive Map (Click to Select Location)")
+    
+    # ---- Folium Map for Clicks ----
+    folium_map = folium.Map(location=[20, 78], zoom_start=5)
+    clicked_location = st_folium(folium_map, height=500, width=700)
+
+    # ---- Get Clicked Coordinates ----
+    lat, lon = None, None
+    if clicked_location and clicked_location["last_clicked"]:
+        lat = clicked_location["last_clicked"]["lat"]
+        lon = clicked_location["last_clicked"]["lng"]
+
+with col2:
+    st.write("### 📌 Selected Coordinates")
+    if lat and lon:
+        st.write(f"**Latitude:** `{lat}`")
+        st.write(f"**Longitude:** `{lon}`")
+        st.success("✔️ Click 'Predict Solar Potential' below to proceed.")
+    else:
+        st.warning("⚠️ Click on the map to select a location.")
+
+    # ---- Prediction Button ----
+    if lat and lon:
+        if st.button("🔍 Predict Solar Potential"):
+            # Mock Prediction (Replace with actual API call)
+            solar_potential = np.round(np.random.uniform(3, 6), 2)  # Random kWh/m²
+
+            st.success(f"🌞 Predicted Solar Potential: **{solar_potential} kWh/m²**")
+
+            # ---- ✅ Solar Panel Suitability Suggestions ----
+            if solar_potential >= 4.5:
+                st.success("✅ This location is **highly suitable** for solar panels!")
+            else:
+                st.error("❌ This location **may not be ideal** for solar panels.")
+
+            # ---- 📈 Historical Solar Potential Trends ----
+            years = list(range(2015, 2025))
+            solar_trend = np.random.uniform(3, 6, len(years))  # Mock data
+
+            df_trend = pd.DataFrame({"Year": years, "Solar Potential (kWh/m²)": solar_trend})
+            fig_trend = px.line(df_trend, x="Year", y="Solar Potential (kWh/m²)", 
+                                title="Historical Solar Potential Trends",
+                                markers=True)
+            st.plotly_chart(fig_trend, use_container_width=True)
+
+            # ---- 📊 Comparison with Nearby Locations ----
+            locations = ["Selected Location", "Nearby 1", "Nearby 2", "Nearby 3"]
+            potentials = [solar_potential] + list(np.random.uniform(3, 6, 3))  # Mock data
+
+            df_comparison = pd.DataFrame({"Location": locations, "Solar Potential": potentials})
+            fig_bar = px.bar(df_comparison, x="Location", y="Solar Potential",
+                             title="Solar Potential vs Nearby Locations",
+                             color="Solar Potential", color_continuous_scale="YlOrRd")
+            st.plotly_chart(fig_bar, use_container_width=True)
+
+# ---- Add Some Styling ----
+st.markdown(
+    """
+    <style>
+    .stButton>button {
+        width: 100%;
+        font-size: 18px;
+        font-weight: bold;
+        background-color: #FFA500;
+        color: white;
+        border-radius: 10px;
+    }
+    </style>
+    """, unsafe_allow_html=True
+)
+
+
+
+
+" main "
+
+import streamlit as st
+
+# ---- Page Configuration ----
+st.set_page_config(page_title="Solar Energy Prediction", layout="wide")
+
+# ---- Home Page Content ----
+st.title("🌞 Multi-Modal Solar Energy Prediction")
+st.markdown("""
+### 📌 Problem Statement  
+Accurate solar energy forecasting is essential for optimizing solar panel installations and energy grid planning.  
+This project aims to improve solar energy potential prediction using **multi-modal approaches**:  
+- **Location-Based Prediction** using geographical coordinates 🌍  
+- **Image-Based Prediction** using satellite images 🖼️  
+
+### 🎯 Purpose of This Project  
+✅ Help decision-makers optimize solar farm locations  
+✅ Improve renewable energy forecasting with deep learning  
+✅ Compare two different prediction approaches  
+
+### 🧠 Model Developed  
+- **Location-Based Model** → Uses spatial interpolation (cKDTree) for predictions  
+- **Image-Based Model** → A **CNN** trained on satellite images for solar energy estimation  
+""")
+
+# ---- Navigation Buttons ----
+st.markdown("### 🔍 Choose a Prediction Method:")
+col1, col2 = st.columns(2)
+
+with col1:
+    if st.button("📍 Location-Based Prediction"):
+        st.switch_page("/Users/shanes/sep/pages/cord_pred.py")
+
+with col2:
+    if st.button("🖼️ Image-Based Prediction"):
+        st.switch_page("/Users/shanes/sep/pages/image_pred.py")
+
+
+# Add a hero image
+image = Image.open("/Users/shanes/sep/images/solar-energy.jpg")  # Placeholder image, replace with a relevant image
+st.image(image, use_column_width=True)
+
+"cord_pred"
+
+import streamlit as st
+import folium
+from streamlit_folium import st_folium
+import numpy as np
+import pandas as pd
+import plotly.express as px
+
+# ---- Streamlit App Title ----
+st.set_page_config(layout="wide")
+st.title("🌞 Solar Energy Potential Predictor")
+
+# ---- Layout: Map (Left) | Prediction (Center) | Insights (Right) ----
+col1, col2, col3 = st.columns([3, 1.5, 1.5])
+
+with col1:
+    st.write("### 🌍 Interactive Map (Click to Select Location)")
+    
+    # ---- Folium Map for Clicks ----
+    folium_map = folium.Map(location=[20, 78], zoom_start=5)
+    clicked_location = st_folium(folium_map, height=500, width=700)
+
+    # ---- Get Clicked Coordinates ----
+    lat, lon = None, None
+    if clicked_location and clicked_location["last_clicked"]:
+        lat = clicked_location["last_clicked"]["lat"]
+        lon = clicked_location["last_clicked"]["lng"]
+
+solar_potential = None  # Initialize before use
+
+with col2:
+    st.write("### 📌 Selected Coordinates")
+    if lat and lon:
+        st.write(f"**Latitude:** `{lat}`")
+        st.write(f"**Longitude:** `{lon}`")
+        st.success("✔️ Click 'Predict Solar Potential' below to proceed.")
+    else:
+        st.warning("⚠️ Click on the map to select a location.")
+
+    # ---- Prediction Button ----
+    if lat and lon:
+        if st.button("🔍 Predict Solar Potential"):
+            solar_potential = np.round(np.random.uniform(3, 6), 2)  # Mock Prediction
+            st.success(f"🌞 Predicted Solar Potential: **{solar_potential} kWh/m²**")
+
+            # ---- ✅ Solar Panel Suitability Suggestions ----
+            if solar_potential >= 4.5:
+                st.success("✅ Highly suitable for solar panels!")
+            else:
+                st.error("❌ May not be ideal for solar panels.")
+
+with col3:
+    st.write("### 📊 Insights")
+    
+    if solar_potential is not None:  # Ensure the variable is defined
+        # ---- 📈 Historical Solar Potential Trends ----
+        years = list(range(2015, 2025))
+        solar_trend = np.random.uniform(3, 6, len(years))  # Mock data
+
+        df_trend = pd.DataFrame({"Year": years, "Solar Potential (kWh/m²)": solar_trend})
+        fig_trend = px.line(df_trend, x="Year", y="Solar Potential (kWh/m²)", 
+                            title="Historical Trends", markers=True)
+        st.plotly_chart(fig_trend, use_container_width=True)
+
+        # ---- 📊 Comparison with Nearby Locations ----
+        locations = ["Selected Location", "Nearby 1", "Nearby 2", "Nearby 3"]
+        potentials = [solar_potential] + list(np.random.uniform(3, 6, 3))  # Mock data
+
+        df_comparison = pd.DataFrame({"Location": locations, "Solar Potential": potentials})
+        fig_bar = px.bar(df_comparison, x="Location", y="Solar Potential",
+                         title="Nearby Solar Potential",
+                         color="Solar Potential", color_continuous_scale="YlOrRd")
+        st.plotly_chart(fig_bar, use_container_width=True)
+    else:
+        st.warning("⚠️ Click 'Predict Solar Potential' first to view insights.")
+
+# ---- Add Some Styling ----
+st.markdown(
+    """
+    <style>
+    .stButton>button {
+        width: 100%;
+        font-size: 18px;
+        font-weight: bold;
+        background-color: #FFA500;
+        color: white;
+        border-radius: 10px;
+    }
+    </style>
+    """, unsafe_allow_html=True
+)
+
+"image_pred"
+
+import streamlit as st
+import numpy as np
+import cv2
+from tensorflow.keras.models import load_model
+
+# ---- Set Absolute Path to Model ----
+model_path = "/Users/shanes/sep/solar_forecasting_model.h5"  # Explicit full path
+
+# ---- Load Model Safely ----
+model = None  # Initialize model variable
+if st.button("🔄 Load Model"):
+    try:
+        model = load_model(model_path)
+        st.success("🎯 Model loaded successfully!")
+    except Exception as e:
+        st.error(f"🔴 Error loading model: {e}")
+
+# ---- Function to Preprocess Image ----
+def preprocess_image(img):
+    img = cv2.imdecode(np.frombuffer(img.read(), np.uint8), cv2.IMREAD_GRAYSCALE)
+    img = cv2.resize(img, (64, 64))
+    img = img / 255.0  
+    img = np.expand_dims(img, axis=-1)
+    img = np.expand_dims(img, axis=0)
+    return img
+
+# ---- Image Upload ----
+st.title("🖼️ Image-Based Solar Energy Prediction")
+uploaded_image = st.file_uploader("Upload a satellite image", type=["jpg", "png", "jpeg"])
+
+if uploaded_image:
+    st.image(uploaded_image, caption="Uploaded Image", use_column_width=True)
+
+    if model is not None:
+        processed_img = preprocess_image(uploaded_image)
+        prediction = model.predict(processed_img)[0][0]
+        st.success(f"🌞 Solar Potential from Image: **{prediction:.2f} kWh/m²**")
+    else:
+        st.error("⚠️ Model not loaded. Click 'Load Model' first.")
+
+# ---- Navigation back to main page ----
+if st.button("🔙 Back to Home"):
+    st.switch_page("../main.py")
